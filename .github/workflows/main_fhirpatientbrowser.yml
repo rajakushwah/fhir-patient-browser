@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'fhirpatientbrowser'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_4d8a0456014743628c88ac912ca8c2fa }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_726baacb7d84418cb81560cfbb4237b0 }}
