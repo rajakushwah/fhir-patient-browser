@@ -1,0 +1,32 @@
+<html lang="en">
+{% load static %}
+<head>
+  <link rel="icon" href="static/app/zslogo.png" type="image/png" sizes="16x16">
+  <title>JSON Data Viewer</title>
+</head>
+<body>
+<h1 style="color:green;">
+	<u>JSON Data</u>
+</h1>
+
+<p id="GFG_UP" style=
+        "font-size: 15px; font-weight: bold;">
+    {{param}}
+</p>
+<pre id="GFG_DOWN" style=
+        "color:green; font-size: 20px; font-weight: bold;">
+</pre>
+<script>
+		var el_up = document.getElementById("GFG_UP");
+		var el_down = document.getElementById("GFG_DOWN");
+		var obj = {
+			{param}
+		};
+		el_up.innerHTML = JSON.stringify(obj,null, 4);
+		function gfg_Run() {
+			el_down.innerHTML = JSON.stringify(obj,null, 4);
+		}
+</script>
+</body>
+
+</html>

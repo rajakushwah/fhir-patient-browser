@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <link rel="icon" href='static/app/icon.png' type="png" sizes="16x16">
+  <title>ZS Patient Viewer </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+<img src="{% static 'app/zslogo.png' %}" alt="something" width="180" height="120" ALIGN="left"/>
+<img src="{% static 'app/zspatient.png' %}" alt="something" width="180" height="150" ALIGN="right"/>
+  <h1><span style="color: #0000a0">Patient viewer </span>Application</h1>
+  <p>This application will help you to browse the patient data from fhir server!</p>
+</div>
+
+<div class="container">
+  <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="300" height="150" class="accesspatient" style="vertical-align:top" align="right"/>
+  <h4 style="font-family: 'Open Sans', sans-serif;">Enter Patient ID</h4>
+  <form action="/" method="POST" class="form-inline">{% csrf_token %}
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search by id..." name="ID">
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+  </form>
+
+  <br>
+  <form class="form-inline" action="/" method="GET">
+    <h4 style="font-family: 'Open Sans', sans-serif;">Get all Patients</h4>
+    <button type="submit" class="btn btn-success" data-toggle="popover"
+            title="This click will get you all patients available to fhir server">Click here
+    </button>
+  </form>
+  <br>
+</div>
+
+<!--<div class="row" align="center" style="vertical-align:top" >-->
+<!--  <h4 style="font-family: 'Open Sans', sans-serif;">Enter URL</h4>-->
+<!--  <form action="/" method="POST" class="form-inline">{% csrf_token %}-->
+<!--    <div class="input-group">-->
+<!--      <input type="text" class="form-control" placeholder="Search by request..." name="URL">-->
+<!--      <div class="input-group-btn">-->
+<!--        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--</div>-->
+
+
+<hr>
+
+
+
+
+<div class="container">
+  <h3>Patient Filterable Table</h3>
+  <p>Type something in the input field to search the table for names, gender or id etc:</p>
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <h4 style="color:#4cae4c"><b><u>Patient Information</u> --></b></h4>
+  <table class="table table table-striped">
+    <thead>
+      <tr>
+        <th>Resource Type</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Birth Date</th>
+        <th>Address</th>
+        <th>JSON Data</th>
+      </tr>
+    </thead>
+    {% for resourceType,id,name,gender,birth,address in param %}
+    <tbody id="myTable">
+      <tr>
+        <td>{{resourceType}}</td>
+        <td>{{id}}</td>
+        <td>{{birth}}</td>
+        <td>{{gender}}</td>
+        <td>{{name}}</td>
+        <td>{{address}}</td>
+        <td><a href="/jsonviewPatient/{{id}}"><Button class="btn btn-success">click me</Button></a></td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+  <ul class="pager">
+  <li><a href="#">Previous</a></li>
+  <li><a href="{{ pager }}">Next</a></li>
+</ul>
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+<br>
+<hr>
+<form action="/" method="GET">
+  <div class="container">
+    <h4 style="color:#4cae4c"><b><u>Observations</u> --></b><a href="/observation/" type="submit">  Click here</a></h4>
+    <!--      <button type="submit" class="btn btn-success">Click me</button>-->
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Resource Type</th>
+        <th>ID</th>
+        <th>References</th>
+        <th>Display</th>
+        <th>Category</th>
+        <th>Value</th>
+        <th>JSON Data</th>
+      </tr>
+      </thead>
+      {% for resourceType,id,refrences,display,category,value in obsparam %}
+      <tbody>
+      <tr>
+        <td>{{resourceType}}</td>
+        <td>{{id}}</td>
+        <td>{{refrences}}</td>
+        <td>{{display}}</td>
+        <td>{{category}}</td>
+        <td>{{value}}</td>
+        <td><a href="/jsonviewObservation/">click me</a></td>
+<!--        <td><a href="/jsonviewObservation/{{id}}"><Button class="btn btn-success">click me</Button></a></td>-->
+      </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+  </div>
+</form>
+<br>
+<hr>
+<div class="container">
+  <h4 style="color:#4cae4c"><b><u>Encounters</u> --></b><a href="/encounter/" type="submit">  Click here</a></h4>
+<!--    <button type="submit" class="btn btn-success">Click me</button>-->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Resource Type</th>
+        <th>ID</th>
+        <th>Priority</th>
+        <th>ReasonCode</th>
+        <th>Admit Source</th>
+        <th>Service Provider</th>
+        <th>JSON Data</th>
+      </tr>
+    </thead>
+    {% for resourceType,id,priority,reasonCode,admitSource,serviceProvider in encounter_param %}
+    <tbody>
+      <tr>
+        <td>{{resourceType}}</td>
+        <td>{{id}}</td>
+        <td>{{priority}}</td>
+        <td>{{reasonCode}}</td>
+        <td>{{admitSource}}</td>
+        <td>{{serviceProvider}}</td>
+        <td><a href="/jsonviewEncounter/"><Button class="btn btn-success">click me</Button></a></td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+<br>
+<hr>
+
+
+</body>
+</html>
