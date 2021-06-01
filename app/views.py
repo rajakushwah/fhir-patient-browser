@@ -7,6 +7,8 @@ import adal
 #Function to extract patient data based on id,all patients
 pid=""
 TOKEN=""
+encounter_id=""
+observation_id=""
 def home(request):
     # oauth 2.0 --FHIR SERVER AUTHORIZATION
     TENANT_ID = '4ac32c75-8316-44c4-925a-c3bec0b6f4ef'
@@ -136,6 +138,8 @@ def observation(request):
                     l.append(resourceType)
 
                     id = all_data['resource']['id']
+                    global observation_id
+                    observation_id = id
                     l.append(id)
 
                     try:
@@ -169,7 +173,7 @@ def observation(request):
                     # print(resourceType, id, reference, display, value, category, effectiveDateTime)
 
                     lst.append(l)
-        obsparam = {'obsparam': lst}
+        obsparam = {'obsparam': lst,'observation_id':observation_id}
         return render(request, 'app/home.html', obsparam)
 
 def encounter(request):
@@ -197,6 +201,8 @@ def encounter(request):
 
                     try:
                         id = all_data['resource']['id']
+                        global encounter_id
+                        encounter_id=id
                     except:
                         id = "No data available"
                     l.append(id)
@@ -227,7 +233,7 @@ def encounter(request):
                     l.append(serviceProvider)
 
                     lst.append(l)
-        encounter_param = {'encounter_param': lst}
+        encounter_param = {'encounter_param': lst,'encounter_id':encounter_id}
         return render(request, 'app/home.html', encounter_param)
 
 # def url(request):
@@ -252,9 +258,10 @@ def jsonviewPatient(request,id):
     param = {'param':json_formatted_patient}
     return render(request,'app/jsondata.html',param)
 
-def jsonviewObservation(request):
-    id = str(pid)
-    url = "https://demoonfhir.azurehealthcareapis.com/Observation?patient={}".format(id)
+def jsonviewObservation(request,id):
+    json_formated_observation=''
+    id = str(id)
+    url = "https://demoonfhir.azurehealthcareapis.com/Observation/{}".format(id)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
@@ -263,9 +270,10 @@ def jsonviewObservation(request):
     param = {'param':json_formated_observation}
     return render(request,'app/jsondata.html',param)
 
-def jsonviewEncounter(request):
-    id = str(pid)
-    url = "https://demoonfhir.azurehealthcareapis.com/Encounter?patient={}".format(id)
+def jsonviewEncounter(request,id):
+    id = str(id)
+    url = "https://demoonfhir.azurehealthcareapis.com/Encounter/{}".format(id)
+    print(url)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:

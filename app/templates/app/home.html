@@ -134,8 +134,7 @@ $(document).ready(function(){
         <td>{{display}}</td>
         <td>{{category}}</td>
         <td>{{value}}</td>
-        <td><a href="/jsonviewObservation/">click me</a></td>
-<!--        <td><a href="/jsonviewObservation/{{id}}"><Button class="btn btn-success">click me</Button></a></td>-->
+        <td><a href="/jsonviewObservation/{{id}}">click me</a></td>
       </tr>
       </tbody>
       {% endfor %}
@@ -168,7 +167,7 @@ $(document).ready(function(){
         <td>{{reasonCode}}</td>
         <td>{{admitSource}}</td>
         <td>{{serviceProvider}}</td>
-        <td><a href="/jsonviewEncounter/"><Button class="btn btn-success">click me</Button></a></td>
+        <td><a href="/jsonviewEncounter/{{id}}"><Button class="btn btn-success">click me</Button></a></td>
       </tr>
     </tbody>
     {% endfor %}

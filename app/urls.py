@@ -6,7 +6,7 @@ urlpatterns = [
     path('observation/',views.observation,name='observation' ),
     path('encounter/',views.encounter,name='encounter' ),
     path('jsonviewPatient/<id>/',views.jsonviewPatient, name='jsonviewPatient' ),
-    path('jsonviewObservation/', views.jsonviewObservation, name='jsonviewObservation'),
-    path('jsonviewEncounter/', views.jsonviewEncounter, name='jsonviewEncounter'),
+    path('jsonviewObservation/<id>/', views.jsonviewObservation, name='jsonviewObservation'),
+    path('jsonviewEncounter/<id>/', views.jsonviewEncounter, name='jsonviewEncounter'),
 
     ]
