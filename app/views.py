@@ -3,6 +3,7 @@ from operator import itemgetter
 import requests
 import json
 import adal
+from django.core.paginator import Paginator
 
 #Function to extract patient data based on id,all patients
 pid=""
@@ -24,7 +25,7 @@ def home(request):
     global TOKEN
     TOKEN = token["accessToken"]
 
-    # all patients
+    # Get Patient by id
     if request.method == "POST":
         lst = []
         global pid
@@ -36,40 +37,38 @@ def home(request):
         if response.ok:
             l = []
             resourceType = data['resourceType']
+            l.append(resourceType)
+
             id = data['id']
+            l.append(id)
 
             try:
                 birth = data['birthDate']
             except:
                 birth = "No data available"
+            l.append(birth)
 
             try:
                 gender = data['gender']
             except:
                 gender = "No data available"
+            l.append(gender)
 
             try:
                 name = data['name'][0]['family']
             except:
                 name = "No data available"
+            l.append(name)
 
             try:
                 address = data['address'][0]['city']
             except:
                 address = "No data available"
-
-            json = data
-
-            l.append(resourceType)
-            l.append(id)
-            l.append(birth)
-            l.append(gender)
-            l.append(name)
             l.append(address)
             lst.append(l)
         param = {'param': lst,"id":pid}
         return render(request, 'app/home.html', param)
-
+    #all patients
     elif request.method == 'GET':
         url = "https://demoonfhir.azurehealthcareapis.com/Patient"
         newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" %TOKEN}
@@ -112,8 +111,7 @@ def home(request):
                 l.append(address)
 
                 lst.append(l)
-        # param = {'param':lst,'pager':next_pge_url}
-        param = {'param': lst}
+        param = {'param':lst}
         return render(request, 'app/home.html', param)
 
 def observation(request):
@@ -168,10 +166,6 @@ def observation(request):
                     except:
                         value = "No data available"
                     l.append(value)
-                    # effectiveDateTime = all_data['resource']['effectiveDateTime']
-                    # l.append(effectiveDateTime)
-                    # print(resourceType, id, reference, display, value, category, effectiveDateTime)
-
                     lst.append(l)
         obsparam = {'obsparam': lst,'observation_id':observation_id}
         return render(request, 'app/home.html', obsparam)
@@ -236,17 +230,6 @@ def encounter(request):
         encounter_param = {'encounter_param': lst,'encounter_id':encounter_id}
         return render(request, 'app/home.html', encounter_param)
 
-# def url(request):
-#     if request.method == "POST":
-#         input = request.POST.get('URL', '')
-#         url = ""
-#         newHeaders = {'Content-type': 'application/json',"Authorization": "Bearer %s" %TOKEN}
-#         response = requests.get(url, headers=newHeaders,verify=False)
-#         data = response.json()
-#         json_formated_url = json.dumps(data, sort_keys=True, indent=4)
-#         param = {'param': json_formated_url,"url":input}
-#         return render(request, 'app/jsondata.html', param)
-
 def jsonviewPatient(request,id):
     id = str(id)
     url = "https://demoonfhir.azurehealthcareapis.com/Patient/{}".format(id)
@@ -254,7 +237,7 @@ def jsonviewPatient(request,id):
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formatted_patient= json.dumps(json_data, indent=2 ,sort_keys=True)
+        json_formatted_patient= json.dumps(json_data, sort_keys = True, indent = 4)
     param = {'param':json_formatted_patient}
     return render(request,'app/jsondata.html',param)
 
@@ -266,70 +249,21 @@ def jsonviewObservation(request,id):
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formated_observation=json.dumps(json_data, sort_keys=True, indent=2)
+        json_formated_observation=json.dumps(json_data, sort_keys = True, indent = 4)
     param = {'param':json_formated_observation}
     return render(request,'app/jsondata.html',param)
 
 def jsonviewEncounter(request,id):
     id = str(id)
     url = "https://demoonfhir.azurehealthcareapis.com/Encounter/{}".format(id)
-    print(url)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formated_encounter=json.dumps(json_data, sort_keys=True, indent=4)
+        json_formated_encounter=json.dumps(json_data, sort_keys = True, indent = 4)
     param = {'param':json_formated_encounter}
     return render(request,'app/jsondata.html',param)
 
-# def nextPage(request,id):
-#     id = str(id)
-#     url = "https://demoonfhir.azurehealthcareapis.com/Patient={}".format(id)
-#     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
-#     response = requests.get(url, headers=newHeaders,verify=False)
-#     next_pge_url = response.json()['link'][1].get('url')
-#     new_url=next_pge_url
-#     header = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
-#     nextPageResponse = requests.get(new_url, headers=header)
-#     lst = []
-#     if nextPageResponse.ok:
-#         data = nextPageResponse.json()
-#         entry = data['entry']
-#         for all_data in entry:
-#             l = []
-#             resourceType = all_data['resource']['resourceType']
-#             l.append(resourceType)
-#
-#             id = all_data['resource']['id']
-#             l.append(id)
-#
-#             try:
-#                 birth = all_data['resource']['birthDate']
-#             except:
-#                 birth = "No data available"
-#             l.append(birth)
-#
-#             try:
-#                 gender = all_data['resource']['gender']
-#             except:
-#                 gender = "No data available"
-#             l.append(gender)
-#
-#             try:
-#                 name = all_data['resource']['name'][0]['family']
-#             except:
-#                 name = "No data available"
-#             l.append(name)
-#
-#             try:
-#                 address = all_data['resource']['address'][0]['city']
-#             except:
-#                 address = "No data available"
-#             l.append(address)
-#
-#             lst.append(l)
-#     param = {'param': lst}
-#     return render(request, 'app/home.html', param)
 
 def error_404_view(request,exception):
     return render(request,'app/404.html')
