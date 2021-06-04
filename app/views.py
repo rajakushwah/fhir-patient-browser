@@ -3,6 +3,8 @@ from operator import itemgetter
 import requests
 import json
 import adal
+import jsontree
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 #Function to extract patient data based on id,all patients
@@ -237,21 +239,21 @@ def jsonviewPatient(request,id):
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formatted_patient= json.dumps(json_data, sort_keys = True, indent = 4)
-    param = {'param':json_formatted_patient}
-    return render(request,'app/jsondata.html',param)
+        # json_formatted_patient= json.dumps(json_data, sort_keys = True, indent = 4)
+    # param = {'param':json_formatted_patient}
+    return JsonResponse(json_data,content_type='application/json')
 
 def jsonviewObservation(request,id):
-    json_formated_observation=''
     id = str(id)
     url = "https://demoonfhir.azurehealthcareapis.com/Observation/{}".format(id)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formated_observation=json.dumps(json_data, sort_keys = True, indent = 4)
-    param = {'param':json_formated_observation}
-    return render(request,'app/jsondata.html',param)
+    #     json_formated_observation=json.dumps(json_data, sort_keys = True, indent = 4)
+    # param = {'param':json_formated_observation}
+    # return render(request,'app/jsondata.html',param)
+    return JsonResponse(json_data,content_type='application/json')
 
 def jsonviewEncounter(request,id):
     id = str(id)
@@ -260,9 +262,10 @@ def jsonviewEncounter(request,id):
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
         json_data = response.json()
-        json_formated_encounter=json.dumps(json_data, sort_keys = True, indent = 4)
-    param = {'param':json_formated_encounter}
-    return render(request,'app/jsondata.html',param)
+    #     json_formated_encounter=json.dumps(json_data, sort_keys = True, indent = 4)
+    # param = {'param':json_formated_encounter}
+    # return render(request,'app/jsondata.html',param)
+    return JsonResponse(json_data,content_type='application/json')
 
 
 def error_404_view(request,exception):
