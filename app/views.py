@@ -3,7 +3,6 @@ from operator import itemgetter
 import requests
 import json
 import adal
-import jsontree
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
