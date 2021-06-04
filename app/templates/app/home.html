@@ -13,10 +13,10 @@
 <body>
 
 <div class="jumbotron text-center">
-<img src="{% static 'app/zslogo.png' %}" alt="something" width="180" height="120" ALIGN="left"/>
-<img src="{% static 'app/zspatient.png' %}" alt="something" width="180" height="150" ALIGN="right"/>
+<img src="{% static 'app/zslogo.png' %}" alt="something" width="170" height="110" ALIGN="left"/>
+<img src="{% static 'app/zspatient.png' %}" alt="something" width="160" height="120" ALIGN="right"/>
   <h1><span style="color: #0000a0">Patient </span>Browser</h1>
-  <p>This application will help you to browse the patient data from fhir server!</p>
+  <h4>This application will help you to browse the patient data from fhir server!</h4>
 </div>
 
 <div class="container">
@@ -41,13 +41,14 @@
       </form>
     </div>
     <div class="col-xs-3">
-    <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="180" height="70" class="accesspatient" style="vertical-align:top"  style="margin-left:4px;" style="margin-bottom:4px;"/>
+    <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="180" height="80" class="accesspatient" style="vertical-align:top"/>
   </div>
   </div>
 </div>
 
 <div class="container">
-  <h3>Patient Filterable Table</h3>
+  <h3><span style="color: #0000a0">Patient Filterable Table </span></h3>
+<!--  <h4>Patient Filterable Table</h4>-->
   <p>Type something in the input field to search the table for names, gender or id etc:</p>
   <input class="form-control" id="myInput" type="text" placeholder="Search..">
   <br>
