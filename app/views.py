@@ -6,6 +6,7 @@ import adal
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
+
 #Function to extract patient data based on id,all patients
 pid=""
 TOKEN=""
@@ -13,14 +14,17 @@ encounter_id=""
 observation_id=""
 def home(request):
     # oauth 2.0 --FHIR SERVER AUTHORIZATION
-    TENANT_ID = '4ac32c75-8316-44c4-925a-c3bec0b6f4ef'
-    CLIENT = '41bc3a0a-2574-406a-833b-eec8f0fc0458'
-    KEY = '~~l_CEnOv0h2a574ud8f-dh2~sr0Qdn_m~'
+    # Opening JSON file
+    f = open('app/credentials.json')
+    data = json.load(f)
+    TENANT_ID = data.get('TENANT_ID')
+    CLIENT = data.get('CLIENT_ID')
+    KEY = data.get('CLIENT_SECRET')
     authority_url = 'https://login.microsoftonline.com/' + TENANT_ID
     context = adal.AuthenticationContext(authority_url)
     global token
     token = context.acquire_token_with_client_credentials(
-        resource='https://demoonfhir.azurehealthcareapis.com',
+        resource=data.get('RESOURCE_ID'),
         client_id=CLIENT,
         client_secret=KEY)
     global TOKEN
