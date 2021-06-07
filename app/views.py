@@ -13,6 +13,7 @@ TOKEN=""
 encounter_id=""
 observation_id=""
 url=""
+Resource=""
 def home(request):
     # oauth 2.0 --FHIR SERVER AUTHORIZATION
     # Opening JSON file
@@ -22,10 +23,12 @@ def home(request):
     CLIENT = data.get('CLIENT_ID')
     KEY = data.get('CLIENT_SECRET')
     authority_url = 'https://login.microsoftonline.com/' + TENANT_ID
+    global Resource
+    Resource=data.get('RESOURCE_ID')
     context = adal.AuthenticationContext(authority_url)
     global token
     token = context.acquire_token_with_client_credentials(
-        resource=data.get('RESOURCE_ID'),
+        resource=Resource,
         client_id=CLIENT,
         client_secret=KEY)
     global TOKEN
@@ -36,7 +39,7 @@ def home(request):
         lst = []
         global pid
         pid = request.POST.get('ID', '')
-        url = "https://demoonfhir.azurehealthcareapis.com/Patient/{}".format(pid)
+        url = Resource+"/Patient/{}".format(pid)
         newHeaders = {'Content-type': 'application/json',"Authorization": "Bearer %s" %TOKEN}
         response = requests.get(url, headers=newHeaders,verify=False)
         data = response.json()
@@ -76,7 +79,7 @@ def home(request):
         return render(request, 'app/home.html', param)
     #all patients
     elif request.method == 'GET':
-        url = "https://demoonfhir.azurehealthcareapis.com/Patient"
+        url = Resource+"/Patient"
         newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" %TOKEN}
         response = requests.get(url, headers=newHeaders, verify=False)
         lst = []
@@ -127,7 +130,7 @@ def observation(request):
         obsparam = {'obsparam': "No patient id found"}
         return render(request, 'app/home.html', obsparam)
     else:
-        url = "https://demoonfhir.azurehealthcareapis.com/Observation?patient={}".format(id)
+        url = Resource+"/Observation?patient={}".format(id)
         newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" %TOKEN}
         response = requests.get(url, headers=newHeaders,verify=False)
         if response.ok:
@@ -182,7 +185,7 @@ def encounter(request):
         obsparam = {'obsparam': "No patient id found"}
         return render(request, 'app/home.html', obsparam)
     else:
-        url = "https://demoonfhir.azurehealthcareapis.com/Encounter?patient={}".format(pid)
+        url = Resource+"/Encounter?patient={}".format(pid)
         newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
         response = requests.get(url, headers=newHeaders,verify=False)
         if response.ok:
@@ -238,7 +241,7 @@ def encounter(request):
 
 def jsonviewPatient(request,id):
     id = str(id)
-    url = "https://demoonfhir.azurehealthcareapis.com/Patient/{}".format(id)
+    url = Resource+"/Patient/{}".format(id)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
@@ -249,7 +252,7 @@ def jsonviewPatient(request,id):
 
 def jsonviewObservation(request,id):
     id = str(id)
-    url = "https://demoonfhir.azurehealthcareapis.com/Observation/{}".format(id)
+    url = Resource+"/Observation/{}".format(id)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
@@ -261,7 +264,7 @@ def jsonviewObservation(request,id):
 
 def jsonviewEncounter(request,id):
     id = str(id)
-    url = "https://demoonfhir.azurehealthcareapis.com/Encounter/{}".format(id)
+    url = Resource+"/Encounter/{}".format(id)
     newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" % TOKEN}
     response = requests.get(url, headers=newHeaders,verify=False)
     if response.ok:
@@ -275,9 +278,8 @@ def url(request):
     if request.method == "POST":
         json_data=''
         url = request.POST.get('URL', '')
-        # print("Efewfewf",url)
         newHeaders = {'Content-type': 'application/json',"Authorization": "Bearer %s" %TOKEN}
-        response = requests.get("https://demoonfhir.azurehealthcareapis.com/"+url, headers=newHeaders,verify=False)
+        response = requests.get(Resource+"/"+url, headers=newHeaders,verify=False)
         if response.ok:
             json_data = response.json()
     return JsonResponse(json_data,content_type='application/json',safe=False)
