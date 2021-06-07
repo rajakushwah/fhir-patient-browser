@@ -12,6 +12,7 @@ pid=""
 TOKEN=""
 encounter_id=""
 observation_id=""
+url=""
 def home(request):
     # oauth 2.0 --FHIR SERVER AUTHORIZATION
     # Opening JSON file
@@ -270,6 +271,16 @@ def jsonviewEncounter(request,id):
     # return render(request,'app/jsondata.html',param)
     return JsonResponse(json_data,content_type='application/json')
 
+def url(request):
+    if request.method == "POST":
+        json_data=''
+        url = request.POST.get('URL', '')
+        # print("Efewfewf",url)
+        newHeaders = {'Content-type': 'application/json',"Authorization": "Bearer %s" %TOKEN}
+        response = requests.get("https://demoonfhir.azurehealthcareapis.com/"+url, headers=newHeaders,verify=False)
+        if response.ok:
+            json_data = response.json()
+    return JsonResponse(json_data,content_type='application/json',safe=False)
 
 def error_404_view(request,exception):
     return render(request,'app/404.html')

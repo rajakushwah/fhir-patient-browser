@@ -21,12 +21,12 @@
 
 <div class="container">
     <div class="row" style="margin-top:30px;">
-        <div class="col-xs-5">
+        <div class="col-xs-4">
             <form action="/" method="POST" class="form-inline">{% csrf_token %}
                 <div class="form-group">
                     <label style="font-size: 15px;">Enter Patient ID</label>
                     <input type="text" class="form-control" placeholder="Search by id..." name="ID"
-                           style="margin-left:4px;width: 50%;">
+                           style="margin-left:4px;width: 30%;">
                     <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
 
                 </div>
@@ -40,20 +40,35 @@
                 </div>
             </form>
         </div>
-        <div class="col-xs-3">
-            <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="180" height="80"
-                 class="accesspatient" style="vertical-align:top"/>
+        <div class="col-xs-4 ">
+            <form action="/url/" method="POST" class="form-inline">{% csrf_token %}
+                <div class="form-group">
+                    <label style="font-size: 15px;">Url Search</label>
+                    <input type="text" class="form-control" placeholder="Search by url.." name="URL"
+                           style="margin-left:4px;width: 61%;">
+                    <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
         </div>
+<!--        <div class="col-xs-3">-->
+<!--            <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="180" height="80"-->
+<!--                 class="accesspatient" style="vertical-align:top"/>-->
+<!--        </div>-->
     </div>
 </div>
-
+<br>
 <div class="container">
+    <div>
+        <img src="{% static 'app/accesspatient.jpg' %}" alt="something" width="180" height="80"
+             class="accesspatient" style="vertical-align:top" align="right"/>
+    </div>
     <h3><span style="color: #0000a0">Patient Filterable Table </span></h3>
     <!--  <h4>Patient Filterable Table</h4>-->
     <p>Type something in the input field to search the table for names, gender or id etc:</p>
+
     <input class="form-control" id="myInput" type="text" placeholder="Search..">
     <br>
-<!--    <h4 style="color:#4cae4c"><b><u>Patient Information</u> &ndash;&gt;</b></h4>-->
+    <!--    <h4 style="color:#4cae4c"><b><u>Patient Information</u> &ndash;&gt;</b></h4>-->
     <label style="font-size: 15px;"><u style="color:#4cae4c">Patient Information </u> </label>
     <table class="table table-hover">
         <thead>
