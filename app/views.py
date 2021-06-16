@@ -79,13 +79,14 @@ def home(request):
         return render(request, 'app/home.html', param)
     #all patients
     elif request.method == 'GET':
-        url = Resource+"/Patient"
+        url = Resource+"/Patient?_count=20"
         newHeaders = {'Content-type': 'application/json', "Authorization": "Bearer %s" %TOKEN}
         response = requests.get(url, headers=newHeaders, verify=False)
+        data = response.json()
         lst = []
         # next_pge_url = response.json()['link'][0].get('url')
-        if response.ok:
-            data = response.json()
+        key_to_lookup = 'entry'
+        if key_to_lookup in data:
             entry = data['entry']
             for all_data in entry:
                 l = []
@@ -120,8 +121,11 @@ def home(request):
                 l.append(address)
 
                 lst.append(l)
-        param = {'param':lst}
-        return render(request, 'app/home.html', param)
+            param = {'param':lst}
+            return render(request, 'app/home.html', param)
+        else:
+            param = {'param': "No Data Available..!!!"}
+            return render(request, 'app/error.html', param)
 
 def observation(request):
     lst = []
