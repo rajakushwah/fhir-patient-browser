@@ -124,8 +124,28 @@ def home(request):
             param = {'param':lst}
             return render(request, 'app/home.html', param)
         else:
-            param = {'param': "No Data Available..!!!"}
-            return render(request, 'app/error.html', param)
+            l = []
+            resourceType ="No data found"
+            l.append(resourceType)
+
+            id = "No data found"
+            l.append(id)
+
+            birth = "No data found"
+            l.append(birth)
+
+            gender = "No data found"
+            l.append(gender)
+
+            name = "No data found"
+            l.append(name)
+
+            address = "No data found"
+            l.append(address)
+
+            lst.append(l)
+            param = {'param':lst}
+            return render(request, 'app/home.html', param)
 
 def observation(request):
     lst = []
